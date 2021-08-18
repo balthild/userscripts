@@ -1,0 +1,46 @@
+.histories-wrap:not(#a) {
+    max-height: none !important;
+    padding: 0;
+}
+
+.histories:not(#a) {
+    display: block;
+}
+
+.history-item:not(#a) {
+    height: 32px;
+    display: block;
+    line-height: 32px;
+    font-size: 14px;
+    position: relative;
+    cursor: pointer;
+    padding: 0 16px;
+    margin-bottom: 4px;
+
+    background: none;
+    border-radius: 0;
+}
+
+.history-item.active:not(#a),
+.history-item:focus:not(#a),
+.history-item:hover:not(#a) {
+    outline: none;
+    background: #f4f4f4;
+    color: initial;
+}
+
+.history-item .close:not(#a) {
+    display: none;
+}
+
+.history-text {
+    max-width: none !important;
+}
+
+.history-fold-wrap {
+    display: none !important;
+}
+
+.trending {
+    display: none !important;
+}
