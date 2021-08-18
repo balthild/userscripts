@@ -1,3 +1,4 @@
+@-moz-document domain("bilibili.com") {
 .histories-wrap:not(#a) {
     max-height: none !important;
     padding: 0;
@@ -43,4 +44,5 @@
 
 .trending {
     display: none !important;
+}
 }
