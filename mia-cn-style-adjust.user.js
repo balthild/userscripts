@@ -51,7 +51,7 @@
             margin-right: auto !important;
             padding: 0 2rem;
         }
-        
+
         body * {
             line-height: 2;
         }
@@ -113,7 +113,7 @@
         sup, sub {
             font-size: 10.5pt;
         }
-        
+
         img {
             background: #FFFFFF;
             border: 1px solid #CCCCCC;
@@ -124,11 +124,11 @@
         hr {
             margin: 1rem 0;
         }
-        
+
         .MsoFootnoteText {
             font-size: 10.5pt;
         }
-        
+
         .MsoFootnoteText * {
             font-family: unset !important;
         }
@@ -138,7 +138,7 @@
                 padding: 0 4rem;
             }
         }
-        
+
         /* Control */
         #control-button {
             position: fixed;
@@ -146,12 +146,12 @@
             right: 0;
             width: 48px;
             height: 48px;
-            
+
             font-size: 18px;
             font-family: sans-serif;
             line-height: 48px;
             text-align: center;
-            
+
             background: #FFFFFF;
             border: 1px solid #CCCCCC;
             border-right: 0;
@@ -160,35 +160,35 @@
             cursor: pointer;
             user-select: none;
         }
-        
+
         #control-panel {
             position: fixed;
             top: 120px;
             left: 50%;
             width: 320px;
             margin-left: -160px;
-            
+
             font-size: 16px;
             font-family: sans-serif;
-            
+
             display: none;
             background: #FFFFFF;
             border: 1px solid #CCCCCC;
             user-select: none;
         }
-        
+
         #control-panel .control-title {
             display: flex;
             height: 40px;
             border-bottom: 1px solid #CCCCCC;
         }
-        
+
         #control-panel .control-title-text {
             line-height: 40px;
             flex: 1;
             padding-left: 8px;
         }
-        
+
         #control-panel #control-close {
             width: 40px;
             height: 40px;
@@ -198,7 +198,7 @@
             border-left: 1px solid #CCCCCC;
             cursor: pointer;
         }
-        
+
         #control-panel .control-font-family-item {
             height: 32px;
             line-height: 32px;
@@ -207,17 +207,17 @@
             border: 1px solid #CCCCCC;
             cursor: pointer;
         }
-        
+
         #control-panel #control-font-family-custom {
             margin-bottom: 0;
         }
-        
+
         #control-panel #control-font-family-custom-input {
             margin-top: 0;
             border-top: 0;
             cursor: unset;
         }
-        
+
         #control-panel #control-font-family-custom-input input {
             font-family: monospace;
             font-size: 0.8em;
@@ -228,7 +228,7 @@
             margin: 0;
             border: 0;
         }
-        
+
         #control-panel .control-font-size {
             height: 32px;
             line-height: 32px;
@@ -236,22 +236,22 @@
             border: 1px solid #CCCCCC;
             display: flex;
         }
-        
+
         #control-panel .control-font-size-action {
             height: 32px;
             width: 32px;
             text-align: center;
             cursor: pointer;
         }
-        
+
         #control-panel #control-font-size-decrease {
             border-right: 1px solid #CCCCCC;
         }
-        
+
         #control-panel #control-font-size-increase {
             border-left: 1px solid #CCCCCC;
         }
-        
+
         #control-panel #control-font-size-value {
             flex: 1;
             text-align: center;
@@ -272,7 +272,7 @@
         }
 
         const pageFilename = location.pathname.split('/').pop();
-        if (['index.htm', 'index.html'].includes(pageFilename))
+        if (/index.*\.html?$/.test(pageFilename))
             result = false;
 
         return result;
