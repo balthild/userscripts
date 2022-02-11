@@ -259,8 +259,9 @@
     `;
 
     function isArticlePage() {
-        let result = false;
+        let result = true;
 
+        /*
         const linkTags = document.querySelectorAll('link');
         for (const tag of linkTags) {
             if (!tag.href)
@@ -270,9 +271,12 @@
             if (filename === 'MIA01.css')
                 result = true;
         }
+        */
 
         const pageFilename = location.pathname.split('/').pop();
         if (/index.*\.html?$/.test(pageFilename))
+            result = false;
+        if (!pageFilename.includes('.'))
             result = false;
 
         return result;
