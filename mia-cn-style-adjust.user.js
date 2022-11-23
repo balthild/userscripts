@@ -268,7 +268,7 @@
                 continue;
 
             const filename = tag.href.split('/').pop();
-            if (filename === 'MIA01.css')
+            if (filename.endsWith('MIA01.css'))
                 result = true;
         }
         */
