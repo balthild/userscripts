@@ -146,45 +146,51 @@
         }
 
         /* Control */
-        #control-button {
+        #control-button, #control-panel {
             position: fixed;
             top: 80px;
-            right: 0;
-            width: 48px;
-            height: 48px;
+            right: 2px;
 
-            font-size: 18px;
             font-family: sans-serif;
-            line-height: 48px;
-            text-align: center;
-
             background: #FFFFFF;
             border: 1px solid rgb(0 0 0 / 24%);
-            border-right: none;
-            border-top-left-radius: 2px;
-            border-bottom-left-radius: 2px;
             box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
+            border-radius: 3px;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        #control-button {
+            width: 36px;
+            height: 36px;
+            font-size: 16px;
+            line-height: 35px;
+            text-align: center;
+
             cursor: pointer;
             user-select: none;
         }
 
-        #control-panel {
-            position: fixed;
-            top: 120px;
-            left: 50%;
-            width: 320px;
-            margin-left: -160px;
-
-            font-size: 14px;
-            font-family: sans-serif;
-
-            background: #FFFFFF;
-            border: 1px solid rgb(0 0 0 / 24%);
-            box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
-            border-radius: 2px;
-
-            user-select: none;
+        #control-button.panel-open {
             display: none;
+        }
+
+        #control-button:hover {
+            background-color: #EEEEEE;
+        }
+
+        #control-panel {
+            width: 320px;
+            font-size: 14px;
+            display: none;
+        }
+
+        #control-panel.panel-open {
+            display: block;
+        }
+
+        #control-panel .icon {
+            pointer-events: none;
         }
 
         #control-panel .control-title {
@@ -202,16 +208,19 @@
         #control-panel #control-close {
             width: 36px;
             height: 36px;
-            line-height: 36px;
             text-align: center;
-            font-size: 24px;
             margin-left: -36px;
             cursor: pointer;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12.0007 10.5865L16.9504 5.63672L18.3646 7.05093L13.4149 12.0007L18.3646 16.9504L16.9504 18.3646L12.0007 13.4149L7.05093 18.3646L5.63672 16.9504L10.5865 12.0007L5.63672 7.05093L7.05093 5.63672L12.0007 10.5865Z'%3E%3C/path%3E%3C/svg%3E") no-repeat center / 20px;
         }
 
         #control-panel #control-close:hover {
             background-color: #EEEEEE;
+        }
+
+        #control-panel #control-close .icon {
+            width: 20px;
+            height: 20px;
+            margin: 8px 0;
         }
 
         #control-panel .control-font-family {
@@ -220,28 +229,38 @@
             border-radius: 2px;
         }
 
-        #control-panel .control-font-family-item {
+        #control-panel .control-font-family-button-group {
+            display: flex;
+        }
+
+        #control-panel .control-font-family-button {
+            flex: 1;
             height: 32px;
             line-height: 32px;
             text-align: center;
-            border-bottom: 1px solid #CCCCCC;
             cursor: pointer;
         }
 
-        #control-panel .control-font-family-item:not(.input):hover {
+        #control-panel .control-font-family-button:hover {
             background: #EEEEEE;
         }
 
-        #control-panel .control-font-family-item:not(.input).current {
+        #control-panel .control-font-family-button.current {
             background: #CCCCCC;
         }
 
-        #control-panel .control-font-family-item.input {
-            border-bottom: none;
+        #control-panel .control-font-family-custom-field {
+            height: 32px;
+            border-top: 1px solid #CCCCCC;
             cursor: unset;
+            display: none;
         }
 
-        #control-panel .control-font-family-item.input input {
+        #control-panel .control-font-family[data-current="custom"] .control-font-family-custom-field {
+            display: block;
+        }
+
+        #control-panel .control-font-family-custom-field input {
             font-family: monospace;
             font-size: 1em;
             width: 100%;
@@ -273,16 +292,15 @@
         #control-panel .control-spinbox-action {
             height: 32px;
             width: 32px;
+            text-align: center;
             border-left: 1px solid #CCCCCC;
             cursor: pointer;
         }
 
-        #control-panel .control-spinbox-action.dec {
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 11V13H19V11H5Z'%3E%3C/path%3E%3C/svg%3E") no-repeat center / 20px;
-        }
-
-        #control-panel .control-spinbox-action.inc {
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z'%3E%3C/path%3E%3C/svg%3E") no-repeat center / 20px;
+        #control-panel .control-spinbox-action .icon {
+            width: 20px;
+            height: 20px;
+            margin: 6px 0;
         }
 
         #control-panel .control-spinbox-action:hover {
@@ -361,6 +379,10 @@
     }
 
     function addControlPanel() {
+        const iconAdd = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path></svg>`;
+        const iconMinus = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 11V13H19V11H5Z"></path></svg>`;
+        const iconClose = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.0007 10.5865L16.9504 5.63672L18.3646 7.05093L13.4149 12.0007L18.3646 16.9504L16.9504 18.3646L12.0007 13.4149L7.05093 18.3646L5.63672 16.9504L10.5865 12.0007L5.63672 7.05093L7.05093 5.63672L12.0007 10.5865Z"></path></svg>`;
+
         const panel = document.createElement('div');
         panel.className = 'control-addon';
         panel.id = 'control-panel';
@@ -368,27 +390,29 @@
         panel.innerHTML = `
             <div class="control-title">
                 <span class="control-title-text">阅读设置</span>
-                <div id="control-close"></div>
+                <div id="control-close">${iconClose}</div>
             </div>
-            <div class="control-font-family">
-                <div class="control-font-family-item" id="control-font-family-serif">思源宋体</div>
-                <div class="control-font-family-item" id="control-font-family-sans">思源黑体</div>
-                <div class="control-font-family-item" id="control-font-family-custom">自定义</div>
-                <div class="control-font-family-item input" id="control-font-family-custom-input">
-                    <input type="text" />
+            <div class="control-font-family" data-current="${fontFamily}">
+                <div class="control-font-family-button-group">
+                    <div class="control-font-family-button" id="control-font-family-serif">思源宋体</div>
+                    <div class="control-font-family-button" id="control-font-family-sans">思源黑体</div>
+                    <div class="control-font-family-button" id="control-font-family-custom">自定义</div>
+                </div>
+                <div class="control-font-family-custom-field">
+                    <input id="control-font-family-custom-input" type="text" />
                 </div>
             </div>
             <div class="control-spinbox">
                 <span class="control-spinbox-label">文字大小</span>
                 <span class="control-spinbox-value" id="control-font-size-value">${fontSize}</span>
-                <div class="control-spinbox-action dec" id="control-font-size-decrease"></div>
-                <div class="control-spinbox-action inc" id="control-font-size-increase"></div>
+                <div class="control-spinbox-action dec" id="control-font-size-decrease">${iconMinus}</div>
+                <div class="control-spinbox-action inc" id="control-font-size-increase">${iconAdd}</div>
             </div>
             <div class="control-spinbox">
                 <span class="control-spinbox-label">版心宽度</span>
                 <span class="control-spinbox-value" id="control-text-width-value">${textWidth}</span>
-                <div class="control-spinbox-action dec" id="control-text-width-decrease"></div>
-                <div class="control-spinbox-action inc" id="control-text-width-increase"></div>
+                <div class="control-spinbox-action dec" id="control-text-width-decrease">${iconMinus}</div>
+                <div class="control-spinbox-action inc" id="control-text-width-increase">${iconAdd}</div>
             </div>
         `;
 
@@ -406,7 +430,8 @@
 
             document.documentElement.style.setProperty('--font-family', fontFamilyPropertyValue());
 
-            document.querySelectorAll('.control-font-family-item.current').forEach(el => {
+            document.querySelector('.control-font-family').dataset.current = family;
+            document.querySelectorAll('.control-font-family-button.current').forEach(el => {
                 el.classList.remove('current');
             });
             document.getElementById(`control-font-family-${family}`).classList.add('current');
@@ -441,10 +466,12 @@
 
             switch (target.id) {
                 case 'control-button':
-                    panel.style.display = 'block';
+                    panel.classList.add('panel-open');
+                    button.classList.add('panel-open');
                     break;
                 case 'control-close':
-                    panel.style.display = 'none';
+                    panel.classList.remove('panel-open');
+                    button.classList.remove('panel-open');
                     break;
                 case 'control-font-family-serif':
                     updateFontFamily('serif');
@@ -470,7 +497,7 @@
             }
         });
 
-        const input = panel.querySelector('#control-font-family-custom-input input');
+        const input = panel.querySelector('#control-font-family-custom-input');
         input.value = customFont;
         input.addEventListener('input', function (event) {
             let target = event.target;
