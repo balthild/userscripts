@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MIA-CN Style Adjust
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  改善中文马克思主义文库的阅读体验
 // @author       Balthild
 // @match        https://www.marxists.org/chinese/*
@@ -13,6 +13,7 @@
 
     let fontFamily = localStorage.getItem('font-family') || 'sans';
     let fontSize = Number(localStorage.getItem('font-size')) || 20;
+    let textWidth = Number(localStorage.getItem('text-width')) || 32;
 
     let customFont = localStorage.getItem('custom-font') || `'方正悠宋 GBK 508R', serif`
 
@@ -29,15 +30,20 @@
         return `${fontSize}px`;
     }
 
+    function textWidthPropertyValue() {
+        return `${textWidth}rem`;
+    }
+
     // language=css
     const css = `
         :root {
             --font-family: ${fontFamilyPropertyValue()};
             --font-size: ${fontSizePropertyValue()};
+            --text-width: ${textWidthPropertyValue()};
 
             font-family: var(--font-family) !important;
             font-size: var(--font-size) !important;
-            line-height: 2 !important;
+            line-height: 1.9 !important;
         }
 
         html {
@@ -46,7 +52,7 @@
         }
 
         body {
-            max-width: 40rem;
+            max-width: var(--text-width) !important;
             margin-left: auto !important;
             margin-right: auto !important;
             padding: 0 2rem;
@@ -153,10 +159,11 @@
             text-align: center;
 
             background: #FFFFFF;
-            border: 1px solid #CCCCCC;
-            border-right: 0;
-            border-top-left-radius: 6px;
-            border-bottom-left-radius: 6px;
+            border: 1px solid rgb(0 0 0 / 24%);
+            border-right: none;
+            border-top-left-radius: 2px;
+            border-bottom-left-radius: 2px;
+            box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
             cursor: pointer;
             user-select: none;
         }
@@ -168,59 +175,75 @@
             width: 320px;
             margin-left: -160px;
 
-            font-size: 16px;
+            font-size: 14px;
             font-family: sans-serif;
 
-            display: none;
             background: #FFFFFF;
-            border: 1px solid #CCCCCC;
+            border: 1px solid rgb(0 0 0 / 24%);
+            box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
+            border-radius: 2px;
+
             user-select: none;
+            display: none;
         }
 
         #control-panel .control-title {
             display: flex;
-            height: 40px;
+            height: 36px;
             border-bottom: 1px solid #CCCCCC;
         }
 
         #control-panel .control-title-text {
-            line-height: 40px;
+            line-height: 36px;
             flex: 1;
-            padding-left: 8px;
+            text-align: center;
         }
 
         #control-panel #control-close {
-            width: 40px;
-            height: 40px;
-            line-height: 40px;
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
             text-align: center;
             font-size: 24px;
-            border-left: 1px solid #CCCCCC;
+            margin-left: -36px;
             cursor: pointer;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12.0007 10.5865L16.9504 5.63672L18.3646 7.05093L13.4149 12.0007L18.3646 16.9504L16.9504 18.3646L12.0007 13.4149L7.05093 18.3646L5.63672 16.9504L10.5865 12.0007L5.63672 7.05093L7.05093 5.63672L12.0007 10.5865Z'%3E%3C/path%3E%3C/svg%3E") no-repeat center / 20px;
+        }
+
+        #control-panel #control-close:hover {
+            background-color: #EEEEEE;
+        }
+
+        #control-panel .control-font-family {
+            margin: 8px;
+            border: 1px solid #CCCCCC;
+            border-radius: 2px;
         }
 
         #control-panel .control-font-family-item {
             height: 32px;
             line-height: 32px;
             text-align: center;
-            margin: 8px;
-            border: 1px solid #CCCCCC;
+            border-bottom: 1px solid #CCCCCC;
             cursor: pointer;
         }
 
-        #control-panel #control-font-family-custom {
-            margin-bottom: 0;
+        #control-panel .control-font-family-item:not(.input):hover {
+            background: #EEEEEE;
         }
 
-        #control-panel #control-font-family-custom-input {
-            margin-top: 0;
-            border-top: 0;
+        #control-panel .control-font-family-item:not(.input).current {
+            background: #CCCCCC;
+        }
+
+        #control-panel .control-font-family-item.input {
+            border-bottom: none;
             cursor: unset;
         }
 
-        #control-panel #control-font-family-custom-input input {
+        #control-panel .control-font-family-item.input input {
             font-family: monospace;
-            font-size: 0.8em;
+            font-size: 1em;
             width: 100%;
             height: 100%;
             box-sizing: border-box;
@@ -229,58 +252,47 @@
             border: 0;
         }
 
-        #control-panel .control-font-size {
+        #control-panel .control-spinbox {
             height: 32px;
-            line-height: 32px;
             margin: 8px;
             border: 1px solid #CCCCCC;
             display: flex;
+            border-radius: 2px;
         }
 
-        #control-panel .control-font-size-action {
-            height: 32px;
-            width: 32px;
+        #control-panel .control-spinbox span {
+            line-height: 32px;
             text-align: center;
-            cursor: pointer;
+            padding: 0 8px;
         }
 
-        #control-panel #control-font-size-decrease {
+        #control-panel .control-spinbox-label {
             border-right: 1px solid #CCCCCC;
         }
 
-        #control-panel #control-font-size-increase {
+        #control-panel .control-spinbox-action {
+            height: 32px;
+            width: 32px;
             border-left: 1px solid #CCCCCC;
+            cursor: pointer;
         }
 
-        #control-panel #control-font-size-value {
+        #control-panel .control-spinbox-action.dec {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 11V13H19V11H5Z'%3E%3C/path%3E%3C/svg%3E") no-repeat center / 20px;
+        }
+
+        #control-panel .control-spinbox-action.inc {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z'%3E%3C/path%3E%3C/svg%3E") no-repeat center / 20px;
+        }
+
+        #control-panel .control-spinbox-action:hover {
+            background-color: #EEEEEE;
+        }
+
+        #control-panel .control-spinbox-value {
             flex: 1;
-            text-align: center;
         }
     `;
-
-    function isArticlePage() {
-        let result = true;
-
-        /*
-        const linkTags = document.querySelectorAll('link');
-        for (const tag of linkTags) {
-            if (!tag.href)
-                continue;
-
-            const filename = tag.href.split('/').pop();
-            if (filename.endsWith('MIA01.css'))
-                result = true;
-        }
-        */
-
-        const pageFilename = location.pathname.split('/').pop();
-        if (/index.*\.html?$/.test(pageFilename))
-            result = false;
-        if (!pageFilename.includes('.'))
-            result = false;
-
-        return result;
-    }
 
     function addStyles() {
         const style = document.createElement('style');
@@ -288,7 +300,7 @@
         document.head.appendChild(style);
     }
 
-    function nodeNameIs(node, name) {
+    function nodeNameIsAny(node, name) {
         if (Array.isArray(name))
             return name.includes(node.nodeName.toLowerCase());
         else
@@ -302,11 +314,11 @@
             allNodes.push(walker.currentNode);
 
         for (const node of allNodes) {
-            if (!nodeNameIs(node, 'br'))
+            if (!nodeNameIsAny(node, 'br'))
                 continue;
 
             let prevNode = node.previousSibling;
-            while (prevNode && nodeNameIs(prevNode, '#text') && !prevNode.textContent.trim()) {
+            while (prevNode && nodeNameIsAny(prevNode, '#text') && !prevNode.textContent.trim()) {
                 prevNode.remove();
                 prevNode = prevNode.previousSibling;
             }
@@ -340,7 +352,7 @@
 
             const shouldRemove =
                 !(prevNode.textContent || '').trim() ||
-                nodeNameIs(prevNode, noBreakAfterTag) ||
+                nodeNameIsAny(prevNode, noBreakAfterTag) ||
                 noBreakAfterClass.filter(x => prevClasses.has(x)).length;
 
             if (shouldRemove)
@@ -356,20 +368,27 @@
         panel.innerHTML = `
             <div class="control-title">
                 <span class="control-title-text">阅读设置</span>
-                <div id="control-close">&times;</div>
+                <div id="control-close"></div>
             </div>
             <div class="control-font-family">
-                <div class="control-font-family-item" id="control-font-family-serif">有衬线（思源宋体）</div>
-                <div class="control-font-family-item" id="control-font-family-sans">无衬线（思源黑体）</div>
+                <div class="control-font-family-item" id="control-font-family-serif">思源宋体</div>
+                <div class="control-font-family-item" id="control-font-family-sans">思源黑体</div>
                 <div class="control-font-family-item" id="control-font-family-custom">自定义</div>
-                <div class="control-font-family-item" id="control-font-family-custom-input">
+                <div class="control-font-family-item input" id="control-font-family-custom-input">
                     <input type="text" />
                 </div>
             </div>
-            <div class="control-font-size">
-                <div class="control-font-size-action" id="control-font-size-decrease">－</div>
-                <span id="control-font-size-value">${fontSizePropertyValue()}</span>
-                <div class="control-font-size-action" id="control-font-size-increase">＋</div>
+            <div class="control-spinbox">
+                <span class="control-spinbox-label">文字大小</span>
+                <span class="control-spinbox-value" id="control-font-size-value">${fontSize}</span>
+                <div class="control-spinbox-action dec" id="control-font-size-decrease"></div>
+                <div class="control-spinbox-action inc" id="control-font-size-increase"></div>
+            </div>
+            <div class="control-spinbox">
+                <span class="control-spinbox-label">版心宽度</span>
+                <span class="control-spinbox-value" id="control-text-width-value">${textWidth}</span>
+                <div class="control-spinbox-action dec" id="control-text-width-decrease"></div>
+                <div class="control-spinbox-action inc" id="control-text-width-increase"></div>
             </div>
         `;
 
@@ -381,22 +400,34 @@
         document.body.appendChild(panel);
         document.body.appendChild(button);
 
+        function updateFontFamily(family) {
+            fontFamily = family;
+            localStorage.setItem('font-family', fontFamily);
+
+            document.documentElement.style.setProperty('--font-family', fontFamilyPropertyValue());
+
+            document.querySelectorAll('.control-font-family-item.current').forEach(el => {
+                el.classList.remove('current');
+            });
+            document.getElementById(`control-font-family-${family}`).classList.add('current');
+        }
+
         function updateFontSize(delta) {
             fontSize += delta;
             localStorage.setItem('font-size', fontSize);
 
             const propertyValue = fontSizePropertyValue();
             document.documentElement.style.setProperty('--font-size', propertyValue);
-            document.getElementById('control-font-size-value').innerText = propertyValue;
+            document.getElementById('control-font-size-value').innerText = fontSize;
         }
 
-        function updateFontFamily(family) {
-            fontFamily = family;
-            localStorage.setItem('font-family', fontFamily);
+        function updateTextWidth(delta) {
+            textWidth += delta;
+            localStorage.setItem('text-width', textWidth);
 
-            document.documentElement.style.setProperty('--font-family', fontFamilyPropertyValue());
-            document.querySelectorAll('.control-font-family-item').forEach(el => el.style.background = 'none');
-            document.getElementById(`control-font-family-${family}`).style.background = '#CCCCCC';
+            const propertyValue = textWidthPropertyValue();
+            document.documentElement.style.setProperty('--text-width', propertyValue);
+            document.getElementById('control-text-width-value').innerText = textWidth;
         }
 
         updateFontSize(0);
@@ -430,6 +461,12 @@
                 case 'control-font-size-increase':
                     updateFontSize(1);
                     break;
+                case 'control-text-width-decrease':
+                    updateTextWidth(-1);
+                    break;
+                case 'control-text-width-increase':
+                    updateTextWidth(1);
+                    break;
             }
         });
 
@@ -447,6 +484,28 @@
             if (fontFamily === 'custom')
                 document.documentElement.style.setProperty('--font-family', customFont);
         })
+    }
+
+    function isArticlePage() {
+        let result = true;
+
+        const linkTags = document.querySelectorAll('link');
+        for (const tag of linkTags) {
+            if (!tag.href)
+                continue;
+
+            const filename = tag.href.split('/').pop();
+            if (filename.endsWith('MIA01.css'))
+                result = true;
+        }
+
+        const pageFilename = location.pathname.split('/').pop();
+        if (/index.*\.html?$/.test(pageFilename))
+            result = false;
+        if (!pageFilename.includes('.'))
+            result = false;
+
+        return result;
     }
 
     if (isArticlePage()) {
