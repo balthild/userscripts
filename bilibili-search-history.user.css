@@ -1,11 +1,16 @@
 @-moz-document domain("bilibili.com") {
+.bili-header .search-panel:not(#a) {
+    padding-bottom: 4px;
+}
+
 .histories-wrap:not(#a) {
     max-height: none !important;
     padding: 0;
 }
 
-.histories:not(#a) {
+.bili-header .histories:not(#a) {
     display: block;
+    margin: 8px 0 4px;
 }
 
 .history-item:not(#a) {
@@ -16,7 +21,7 @@
     position: relative;
     cursor: pointer;
     padding: 0 16px;
-    margin-bottom: 4px;
+    margin: 2px;
 
     background: none;
     border-radius: 0;
