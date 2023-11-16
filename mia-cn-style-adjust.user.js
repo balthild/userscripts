@@ -241,6 +241,10 @@
             cursor: pointer;
         }
 
+        #control-panel .control-font-family-button:not(:first-child) {
+            border-left: 1px solid #CCCCCC;
+        }
+
         #control-panel .control-font-family-button:hover {
             background: #EEEEEE;
         }
