@@ -148,8 +148,8 @@
         /* Control */
         #control-button, #control-panel {
             position: fixed;
-            top: 80px;
-            right: 2px;
+            top: 16px;
+            right: 16px;
 
             font-family: sans-serif;
             background: #FFFFFF;
