@@ -80,6 +80,7 @@
         }
 
         table {
+            font-size: unset;
             width: auto;
         }
 
