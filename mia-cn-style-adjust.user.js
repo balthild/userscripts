@@ -5,41 +5,23 @@
 // @description  改善中文马克思主义文库的阅读体验
 // @author       Balthild
 // @match        https://www.marxists.org/chinese/*
+// @require      https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.min.js
 // @grant        none
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    let fontFamily = localStorage.getItem('font-family') || 'sans';
-    let fontSize = Number(localStorage.getItem('font-size')) || 20;
-    let textWidth = Number(localStorage.getItem('text-width')) || 32;
-
-    let customFont = localStorage.getItem('custom-font') || `'方正悠宋 GBK 508R', serif`
-
-    function fontFamilyPropertyValue() {
-        if (fontFamily === 'custom')
-            return customFont;
-        if (fontFamily === 'serif')
-            return `'Source Serif', 'Noto Serif', 'Source Han Serif SC', 'Noto Serif CJK SC', serif`;
-        else
-            return `'Source Sans', 'Noto Sans', 'Source Han Sans SC', 'Noto Sans CJK SC', sans-serif`;
-    }
-
-    function fontSizePropertyValue() {
-        return `${fontSize}px`;
-    }
-
-    function textWidthPropertyValue() {
-        return `${textWidth}rem`;
-    }
-
     // language=css
     const css = `
         :root {
-            --font-family: ${fontFamilyPropertyValue()};
-            --font-size: ${fontSizePropertyValue()};
-            --text-width: ${textWidthPropertyValue()};
+            --font-sans: 'Source Sans', 'Noto Sans', 'Source Han Sans SC', 'Noto Sans CJK SC', sans-serif;
+            --font-serif: 'Source Serif', 'Noto Serif', 'Source Han Serif SC', 'Noto Serif CJK SC', serif;
+            --font-custom: '方正悠宋 GBK 508R', serif;
+
+            --font-family: var(--font-sans);
+            --font-size: 20px;
+            --text-width: 32rem;
 
             font-family: var(--font-family) !important;
             font-size: var(--font-size) !important;
@@ -145,183 +127,269 @@
                 padding: 0 4rem;
             }
         }
-
-        /* Control */
-        #control-button, #control-panel {
-            position: fixed;
-            top: 16px;
-            right: 16px;
-
-            font-family: sans-serif;
-            background: #FFFFFF;
-            border: 1px solid rgb(0 0 0 / 24%);
-            box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
-            border-radius: 3px;
-            overflow: hidden;
-            user-select: none;
-        }
-
-        #control-button {
-            width: 36px;
-            height: 36px;
-            font-size: 16px;
-            line-height: 35px;
-            text-align: center;
-
-            cursor: pointer;
-            user-select: none;
-        }
-
-        #control-button.panel-open {
-            display: none;
-        }
-
-        #control-button:hover {
-            background-color: #EEEEEE;
-        }
-
-        #control-panel {
-            width: 320px;
-            font-size: 14px;
-            display: none;
-        }
-
-        #control-panel.panel-open {
-            display: block;
-        }
-
-        #control-panel .icon {
-            pointer-events: none;
-        }
-
-        #control-panel .control-title {
-            display: flex;
-            height: 36px;
-            border-bottom: 1px solid #CCCCCC;
-        }
-
-        #control-panel .control-title-text {
-            line-height: 36px;
-            flex: 1;
-            text-align: center;
-        }
-
-        #control-panel #control-close {
-            width: 36px;
-            height: 36px;
-            text-align: center;
-            margin-left: -36px;
-            cursor: pointer;
-        }
-
-        #control-panel #control-close:hover {
-            background-color: #EEEEEE;
-        }
-
-        #control-panel #control-close .icon {
-            width: 20px;
-            height: 20px;
-            margin: 8px 0;
-        }
-
-        #control-panel .control-font-family {
-            margin: 8px;
-            border: 1px solid #CCCCCC;
-            border-radius: 2px;
-        }
-
-        #control-panel .control-font-family-button-group {
-            display: flex;
-        }
-
-        #control-panel .control-font-family-button {
-            flex: 1;
-            height: 32px;
-            line-height: 32px;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        #control-panel .control-font-family-button:not(:first-child) {
-            border-left: 1px solid #CCCCCC;
-        }
-
-        #control-panel .control-font-family-button:hover {
-            background: #EEEEEE;
-        }
-
-        #control-panel .control-font-family-button.current {
-            background: #CCCCCC;
-        }
-
-        #control-panel .control-font-family-custom-field {
-            height: 32px;
-            border-top: 1px solid #CCCCCC;
-            cursor: unset;
-            display: none;
-        }
-
-        #control-panel .control-font-family[data-current="custom"] .control-font-family-custom-field {
-            display: block;
-        }
-
-        #control-panel .control-font-family-custom-field input {
-            font-family: monospace;
-            font-size: 1em;
-            width: 100%;
-            height: 100%;
-            box-sizing: border-box;
-            padding: 0 8px;
-            margin: 0;
-            border: 0;
-        }
-
-        #control-panel .control-spinbox {
-            height: 32px;
-            margin: 8px;
-            border: 1px solid #CCCCCC;
-            display: flex;
-            border-radius: 2px;
-        }
-
-        #control-panel .control-spinbox span {
-            line-height: 32px;
-            text-align: center;
-            padding: 0 8px;
-        }
-
-        #control-panel .control-spinbox-label {
-            border-right: 1px solid #CCCCCC;
-        }
-
-        #control-panel .control-spinbox-action {
-            height: 32px;
-            width: 32px;
-            text-align: center;
-            border-left: 1px solid #CCCCCC;
-            cursor: pointer;
-        }
-
-        #control-panel .control-spinbox-action .icon {
-            width: 20px;
-            height: 20px;
-            margin: 6px 0;
-        }
-
-        #control-panel .control-spinbox-action:hover {
-            background-color: #EEEEEE;
-        }
-
-        #control-panel .control-spinbox-value {
-            flex: 1;
-        }
     `;
 
-    function addStyles() {
-        const style = document.createElement('style');
-        style.appendChild(document.createTextNode(css));
-        document.head.appendChild(style);
-    }
+    const style = document.createElement('style');
+    style.disabled = true;
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+    const iconAdd = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path></svg>`;
+    const iconMinus = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 11V13H19V11H5Z"></path></svg>`;
+    const iconClose = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.0007 10.5865L16.9504 5.63672L18.3646 7.05093L13.4149 12.0007L18.3646 16.9504L16.9504 18.3646L12.0007 13.4149L7.05093 18.3646L5.63672 16.9504L10.5865 12.0007L5.63672 7.05093L7.05093 5.63672L12.0007 10.5865Z"></path></svg>`;
+
+    const control = document.createElement('div');
+    control.attachShadow({ mode: 'open' });
+    control.shadowRoot.innerHTML = `
+        <style>
+            .addon {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+
+                font-family: sans-serif;
+                background: #FFFFFF;
+                border: 1px solid rgb(0 0 0 / 24%);
+                box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
+                border-radius: 3px;
+                overflow: hidden;
+                user-select: none;
+            }
+
+            .addon.button {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+                line-height: 35px;
+                text-align: center;
+
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .addon.button:hover {
+                background-color: #EEEEEE;
+            }
+
+            .addon.panel {
+                width: 320px;
+                font-size: 14px;
+            }
+
+            .icon {
+                pointer-events: none;
+            }
+
+            .title {
+                display: flex;
+                height: 36px;
+                border-bottom: 1px solid #CCCCCC;
+            }
+
+            .title-text {
+                line-height: 36px;
+                flex: 1;
+                text-align: center;
+            }
+
+            .close {
+                width: 36px;
+                height: 36px;
+                text-align: center;
+                margin-left: -36px;
+                cursor: pointer;
+            }
+
+            .close:hover {
+                background-color: #EEEEEE;
+            }
+
+            .close .icon {
+                width: 20px;
+                height: 20px;
+                margin: 8px 0;
+            }
+
+            .tabs {
+                margin: 8px;
+                border: 1px solid #CCCCCC;
+                border-radius: 2px;
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            .tab {
+                flex: 1;
+                height: 32px;
+                line-height: 32px;
+                text-align: center;
+                cursor: pointer;
+            }
+
+            .tab:hover {
+                background: #EEEEEE;
+            }
+
+            .tab.current {
+                background: #CCCCCC;
+            }
+
+            .font-custom-input {
+                flex-basis: 100%;
+                height: 32px;
+                border-top: 1px solid #CCCCCC;
+                cursor: unset;
+            }
+
+            .font-custom-input input {
+                font-family: monospace;
+                font-size: 1em;
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box;
+                padding: 0 8px;
+                margin: 0;
+                border: 0;
+            }
+
+            .spinbox {
+                height: 32px;
+                margin: 8px;
+                border: 1px solid #CCCCCC;
+                display: flex;
+                border-radius: 2px;
+            }
+
+            .spinbox span {
+                line-height: 32px;
+                text-align: center;
+                padding: 0 8px;
+            }
+
+            .spinbox span.label {
+                border-right: 1px solid #CCCCCC;
+            }
+
+            .spinbox span.value {
+                flex: 1;
+            }
+
+            .spinbox .action {
+                height: 32px;
+                width: 32px;
+                text-align: center;
+                border-left: 1px solid #CCCCCC;
+                cursor: pointer;
+            }
+
+            .spinbox .action:hover {
+                background-color: #EEEEEE;
+            }
+
+            .spinbox .action .icon {
+                width: 20px;
+                height: 20px;
+                margin: 6px 0;
+            }
+        </style>
+
+        <div id="control-app" v-scope>
+            <div class="addon button" v-show="!open" @click="open = true">Aa</div>
+            <div class="addon panel" v-show="open">
+                <div class="title">
+                    <span class="title-text">阅读设置</span>
+                    <div class="close" @click="open = false">${iconClose}</div>
+                </div>
+
+                <div hidden v-effect="onStatusUpdated()"></div>
+                <div class="tabs">
+                    <div class="tab" v-tab:auto="status">自动判断</div>
+                    <div class="tab" v-tab:enabled="status">本页启用</div>
+                    <div class="tab" v-tab:disabled="status">本页禁用</div>
+                </div>
+
+                <div hidden v-effect="onFontFamilyUpdated()"></div>
+                <div hidden v-effect="onFontCustomUpdated()"></div>
+                <div class="tabs">
+                    <div class="tab" v-tab:serif="fontFamily">思源宋体</div>
+                    <div class="tab" v-tab:sans="fontFamily">思源黑体</div>
+                    <div class="tab" v-tab:custom="fontFamily">自定义</div>
+                    <div class="font-custom-input" v-show="fontFamily === 'custom'">
+                        <input type="text" v-model="fontCustom" />
+                    </div>
+                </div>
+
+                <div hidden v-effect="onFontSizeUpdated()"></div>
+                <div class="spinbox">
+                    <span class="label">文字大小</span>
+                    <span class="value">{{ fontSize }}</span>
+                    <div class="action" @click="fontSize--">${iconMinus}</div>
+                    <div class="action" @click="fontSize++">${iconAdd}</div>
+                </div>
+
+                <div hidden v-effect="onTextWidthUpdated()"></div>
+                <div class="spinbox">
+                    <span class="label">版心宽度</span>
+                    <span class="value">{{ textWidth }}</span>
+                    <div class="action" @click="textWidth--">${iconMinus}</div>
+                    <div class="action" @click="textWidth++">${iconAdd}</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(control);
+
+    PetiteVue
+        .createApp({
+            open: false,
+
+            status: localStorage.getItem(`page-status:${location.pathname}`) ?? 'auto',
+            fontFamily: localStorage.getItem('font-family') || 'sans',
+            fontCustom: localStorage.getItem('font-custom') || `'方正悠宋 GBK 508R', serif`,
+            fontSize: Number(localStorage.getItem('font-size')) || 20,
+            textWidth: Number(localStorage.getItem('text-width')) || 32,
+
+            onStatusUpdated() {
+                if (this.status === 'auto') {
+                    style.disabled = !isArticlePage();
+                    localStorage.removeItem(`page-status:${location.pathname}`);
+                } else {
+                    style.disabled = (this.status === 'disabled');
+                    localStorage.setItem(`page-status:${location.pathname}`, this.status);
+                }
+            },
+
+            onFontFamilyUpdated() {
+                const expr = `var(--font-${this.fontFamily})`;
+                document.documentElement.style.setProperty('--font-family', expr);
+                localStorage.setItem('font-family', this.fontFamily);
+            },
+
+            onFontCustomUpdated() {
+                document.documentElement.style.setProperty('--font-custom', this.fontCustom);
+                localStorage.setItem('font-custom', this.fontCustom);
+            },
+
+            onFontSizeUpdated() {
+                document.documentElement.style.setProperty('--font-size', `${this.fontSize}px`);
+                localStorage.setItem('font-size', this.fontSize);
+            },
+
+            onTextWidthUpdated() {
+                document.documentElement.style.setProperty('--text-width', `${this.textWidth}rem`);
+                localStorage.setItem('text-width', this.textWidth);
+            },
+        })
+        .directive('tab', (ctx) => {
+            ctx.el.addEventListener('click', () => {
+                return ctx.get(`${ctx.exp} = '${ctx.arg}'`);
+            });
+            ctx.effect(() => {
+                return ctx.el.classList.toggle('current', ctx.get() === ctx.arg);
+            });
+        })
+        .mount(control.shadowRoot.querySelector('#control-app'));
 
     function nodeNameIsAny(node, name) {
         if (Array.isArray(name))
@@ -383,141 +451,6 @@
         }
     }
 
-    function addControlPanel() {
-        const iconAdd = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path></svg>`;
-        const iconMinus = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 11V13H19V11H5Z"></path></svg>`;
-        const iconClose = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.0007 10.5865L16.9504 5.63672L18.3646 7.05093L13.4149 12.0007L18.3646 16.9504L16.9504 18.3646L12.0007 13.4149L7.05093 18.3646L5.63672 16.9504L10.5865 12.0007L5.63672 7.05093L7.05093 5.63672L12.0007 10.5865Z"></path></svg>`;
-
-        const panel = document.createElement('div');
-        panel.className = 'control-addon';
-        panel.id = 'control-panel';
-        // language=html
-        panel.innerHTML = `
-            <div class="control-title">
-                <span class="control-title-text">阅读设置</span>
-                <div id="control-close">${iconClose}</div>
-            </div>
-            <div class="control-font-family" data-current="${fontFamily}">
-                <div class="control-font-family-button-group">
-                    <div class="control-font-family-button" id="control-font-family-serif">思源宋体</div>
-                    <div class="control-font-family-button" id="control-font-family-sans">思源黑体</div>
-                    <div class="control-font-family-button" id="control-font-family-custom">自定义</div>
-                </div>
-                <div class="control-font-family-custom-field">
-                    <input id="control-font-family-custom-input" type="text" />
-                </div>
-            </div>
-            <div class="control-spinbox">
-                <span class="control-spinbox-label">文字大小</span>
-                <span class="control-spinbox-value" id="control-font-size-value">${fontSize}</span>
-                <div class="control-spinbox-action dec" id="control-font-size-decrease">${iconMinus}</div>
-                <div class="control-spinbox-action inc" id="control-font-size-increase">${iconAdd}</div>
-            </div>
-            <div class="control-spinbox">
-                <span class="control-spinbox-label">版心宽度</span>
-                <span class="control-spinbox-value" id="control-text-width-value">${textWidth}</span>
-                <div class="control-spinbox-action dec" id="control-text-width-decrease">${iconMinus}</div>
-                <div class="control-spinbox-action inc" id="control-text-width-increase">${iconAdd}</div>
-            </div>
-        `;
-
-        const button = document.createElement('div');
-        button.className = 'control-addon';
-        button.id = 'control-button';
-        button.textContent = 'Aa';
-
-        document.body.appendChild(panel);
-        document.body.appendChild(button);
-
-        function updateFontFamily(family) {
-            fontFamily = family;
-            localStorage.setItem('font-family', fontFamily);
-
-            document.documentElement.style.setProperty('--font-family', fontFamilyPropertyValue());
-
-            document.querySelector('.control-font-family').dataset.current = family;
-            document.querySelectorAll('.control-font-family-button.current').forEach(el => {
-                el.classList.remove('current');
-            });
-            document.getElementById(`control-font-family-${family}`).classList.add('current');
-        }
-
-        function updateFontSize(delta) {
-            fontSize += delta;
-            localStorage.setItem('font-size', fontSize);
-
-            const propertyValue = fontSizePropertyValue();
-            document.documentElement.style.setProperty('--font-size', propertyValue);
-            document.getElementById('control-font-size-value').innerText = fontSize;
-        }
-
-        function updateTextWidth(delta) {
-            textWidth += delta;
-            localStorage.setItem('text-width', textWidth);
-
-            const propertyValue = textWidthPropertyValue();
-            document.documentElement.style.setProperty('--text-width', propertyValue);
-            document.getElementById('control-text-width-value').innerText = textWidth;
-        }
-
-        updateFontSize(0);
-        updateFontFamily(fontFamily);
-
-        document.addEventListener('click', function (event) {
-            let target = event.target;
-            if (!target instanceof HTMLElement) {
-                return;
-            }
-
-            switch (target.id) {
-                case 'control-button':
-                    panel.classList.add('panel-open');
-                    button.classList.add('panel-open');
-                    break;
-                case 'control-close':
-                    panel.classList.remove('panel-open');
-                    button.classList.remove('panel-open');
-                    break;
-                case 'control-font-family-serif':
-                    updateFontFamily('serif');
-                    break;
-                case 'control-font-family-sans':
-                    updateFontFamily('sans');
-                    break;
-                case 'control-font-family-custom':
-                    updateFontFamily('custom');
-                    break;
-                case 'control-font-size-decrease':
-                    updateFontSize(-1);
-                    break;
-                case 'control-font-size-increase':
-                    updateFontSize(1);
-                    break;
-                case 'control-text-width-decrease':
-                    updateTextWidth(-1);
-                    break;
-                case 'control-text-width-increase':
-                    updateTextWidth(1);
-                    break;
-            }
-        });
-
-        const input = panel.querySelector('#control-font-family-custom-input');
-        input.value = customFont;
-        input.addEventListener('input', function (event) {
-            let target = event.target;
-            if (!target instanceof HTMLInputElement) {
-                return;
-            }
-
-            customFont = target.value;
-            localStorage.setItem('custom-font', customFont);
-
-            if (fontFamily === 'custom')
-                document.documentElement.style.setProperty('--font-family', customFont);
-        })
-    }
-
     function isArticlePage() {
         let result = true;
 
@@ -541,8 +474,6 @@
     }
 
     if (isArticlePage()) {
-        addStyles();
         removeRedundantLineBreaks();
-        addControlPanel();
     }
 })();
