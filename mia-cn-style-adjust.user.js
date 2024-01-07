@@ -293,7 +293,7 @@
             }
         </style>
 
-        <div id="control-app" v-scope>
+        <div id="control-app" v-scope @vue:mounted="mounted" @vue:unmounted="unmounted">
             <div class="addon button" v-show="!open" @click="open = true">Aa</div>
             <div class="addon panel" v-show="open">
                 <div class="title">
@@ -301,15 +301,15 @@
                     <div class="close" @click="open = false">${iconClose}</div>
                 </div>
 
-                <div hidden v-effect="onStatusUpdated()"></div>
+                <div hidden v-effect="applyPageStatus()"></div>
                 <div class="tabs">
-                    <div class="tab" v-tab:auto="status">自动判断</div>
-                    <div class="tab" v-tab:enabled="status">本页启用</div>
-                    <div class="tab" v-tab:disabled="status">本页禁用</div>
+                    <div class="tab" v-tab:auto="pageStatus">自动判断</div>
+                    <div class="tab" v-tab:enabled="pageStatus">本页启用</div>
+                    <div class="tab" v-tab:disabled="pageStatus">本页禁用</div>
                 </div>
 
-                <div hidden v-effect="onFontFamilyUpdated()"></div>
-                <div hidden v-effect="onFontCustomUpdated()"></div>
+                <div hidden v-effect="applyFontFamily()"></div>
+                <div hidden v-effect="applyFontCustom()"></div>
                 <div class="tabs">
                     <div class="tab" v-tab:serif="fontFamily">思源宋体</div>
                     <div class="tab" v-tab:sans="fontFamily">思源黑体</div>
@@ -319,7 +319,7 @@
                     </div>
                 </div>
 
-                <div hidden v-effect="onFontSizeUpdated()"></div>
+                <div hidden v-effect="applyFontSize()"></div>
                 <div class="spinbox">
                     <span class="label">文字大小</span>
                     <span class="value">{{ fontSize }}</span>
@@ -327,7 +327,7 @@
                     <div class="action" @click="fontSize++">${iconAdd}</div>
                 </div>
 
-                <div hidden v-effect="onTextWidthUpdated()"></div>
+                <div hidden v-effect="applyTextWidth()"></div>
                 <div class="spinbox">
                     <span class="label">版心宽度</span>
                     <span class="value">{{ textWidth }}</span>
@@ -343,42 +343,103 @@
     PetiteVue
         .createApp({
             open: false,
+            settings: {
+                pageStatus: localStorage.getItem(`page-status:${location.pathname}`) ?? 'auto',
+                fontFamily: localStorage.getItem('font-family') || 'sans',
+                fontCustom: localStorage.getItem('font-custom') || `'方正悠宋 GBK 508R', serif`,
+                fontSize: Number(localStorage.getItem('font-size')) || 20,
+                textWidth: Number(localStorage.getItem('text-width')) || 32,
+            },
 
-            status: localStorage.getItem(`page-status:${location.pathname}`) ?? 'auto',
-            fontFamily: localStorage.getItem('font-family') || 'sans',
-            fontCustom: localStorage.getItem('font-custom') || `'方正悠宋 GBK 508R', serif`,
-            fontSize: Number(localStorage.getItem('font-size')) || 20,
-            textWidth: Number(localStorage.getItem('text-width')) || 32,
-
-            onStatusUpdated() {
-                if (this.status === 'auto') {
-                    style.disabled = !isArticlePage();
+            get pageStatus() {
+                return this.settings.pageStatus;
+            },
+            set pageStatus(value) {
+                this.settings.pageStatus = value;
+                if (value === 'auto')
                     localStorage.removeItem(`page-status:${location.pathname}`);
-                } else {
-                    style.disabled = (this.status === 'disabled');
-                    localStorage.setItem(`page-status:${location.pathname}`, this.status);
+                else
+                    localStorage.setItem(`page-status:${location.pathname}`, value);
+            },
+            applyPageStatus() {
+                if (this.pageStatus === 'auto')
+                    style.disabled = !isArticlePage();
+                else
+                    style.disabled = (this.pageStatus === 'disabled');
+            },
+
+            get fontFamily() {
+                return this.settings.fontFamily;
+            },
+            set fontFamily(value) {
+                this.settings.fontFamily = value;
+                localStorage.setItem('font-family', value);
+            },
+            applyFontFamily() {
+                document.documentElement.style.setProperty('--font-family', `var(--font-${this.fontFamily})`);
+            },
+
+            get fontCustom() {
+                return this.settings.fontCustom;
+            },
+            set fontCustom(value) {
+                this.settings.fontCustom = value;
+                localStorage.setItem('font-custom', value);
+            },
+            applyFontCustom() {
+                document.documentElement.style.setProperty('--font-custom', this.fontCustom);
+            },
+
+            get fontSize() {
+                return this.settings.fontSize;
+            },
+            set fontSize(value) {
+                this.settings.fontSize = value;
+                localStorage.setItem('font-size', value);
+            },
+            applyFontSize() {
+                document.documentElement.style.setProperty('--font-size', `${this.fontSize}px`);
+            },
+
+            get textWidth() {
+                return this.settings.textWidth;
+            },
+            set textWidth(value) {
+                this.settings.textWidth = value;
+                localStorage.setItem('text-width', value);
+            },
+            applyTextWidth() {
+                document.documentElement.style.setProperty('--text-width', `${this.textWidth}rem`);
+            },
+
+            pullSettings(event) {
+                if (event.storageArea !== localStorage)
+                    return;
+
+                switch (event.key) {
+                    case `page-status:${location.pathname}`:
+                        this.settings.pageStatus = event.newValue ?? 'auto';
+                        break;
+                    case 'font-family':
+                        this.settings.fontFamily = event.newValue ?? 'sans';
+                        break;
+                    case 'font-custom':
+                        this.settings.fontCustom = event.newValue ?? `'方正悠宋 GBK 508R', serif`;
+                        break;
+                    case 'font-size':
+                        this.settings.fontSize = Number(event.newValue) || 20;
+                        break;
+                    case 'text-width':
+                        this.settings.textWidth = Number(event.newValue) || 32;
+                        break;
                 }
             },
 
-            onFontFamilyUpdated() {
-                const expr = `var(--font-${this.fontFamily})`;
-                document.documentElement.style.setProperty('--font-family', expr);
-                localStorage.setItem('font-family', this.fontFamily);
+            mounted() {
+                window.addEventListener('storage', this.pullSettings);
             },
-
-            onFontCustomUpdated() {
-                document.documentElement.style.setProperty('--font-custom', this.fontCustom);
-                localStorage.setItem('font-custom', this.fontCustom);
-            },
-
-            onFontSizeUpdated() {
-                document.documentElement.style.setProperty('--font-size', `${this.fontSize}px`);
-                localStorage.setItem('font-size', this.fontSize);
-            },
-
-            onTextWidthUpdated() {
-                document.documentElement.style.setProperty('--text-width', `${this.textWidth}rem`);
-                localStorage.setItem('text-width', this.textWidth);
+            unmounted() {
+                window.removeEventListener('storage', this.pullSettings);
             },
         })
         .directive('tab', (ctx) => {
