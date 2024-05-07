@@ -16,7 +16,7 @@
     // Inside player iframe
     if (location.host !== 'www.7xi.tv') {
         window.addEventListener('keydown', (event) => {
-            if (event.code === 'KeyT') {
+            if (event.code === 'KeyW') {
                 window.parent.postMessage('toggle-fullscreen', 'https://www.7xi.tv');
             }
         });
@@ -59,7 +59,7 @@
     });
 
     window.addEventListener('keydown', (event) => {
-        if (event.code === 'KeyT') {
+        if (event.code === 'KeyW') {
             toggle();
         }
     });
