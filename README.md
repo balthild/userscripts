@@ -1,10 +1,14 @@
 # 脚本与样式
 
-`.user.js` 文件导入 Tampermonkey 使用，`.user.css` 文件导入 Stylus 使用。
+`.user.js` 文件导入 Violentmonkey 或 Tampermonkey 使用，`.user.css` 文件导入 Stylus 使用。
 
 ## mia-cn-style-adjust
 
 改善中文马克思主义文库的阅读体验
+
+## in-page-fullscreen
+
+按 t 使支持的网站中的特定元素变成网页全屏，Esc 退出网页全屏。网站支持需要手动添加。
 
 ## bilibili-search-history
 

@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         iframe in-page fullscreen
+// @name         element in-page fullscreen
 // @namespace    http://tampermonkey.net/
 // @version      2024-08-27
 // @description  try to take over the world!
@@ -11,10 +11,13 @@
 (async function () {
     'use strict';
 
-    function getIFrameSelector() {
+    function getSelector() {
         switch (location.host) {
             case 'www.7xi.tv':
                 return '#playleft iframe';
+
+            case 'www.iyf.tv':
+                return '#main-player';
 
             case 'canvas.illinoisstate.edu':
             case 'illinoisstate.instructure.com':
@@ -27,15 +30,19 @@
         const css = String.raw;
 
         let styles = css`
-            body.fullscreen iframe.fullscreen-iframe {
-                position: fixed;
-                z-index: 99999;
-                left: 0;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                width: 100vw;
-                height: 100vh;
+            body.fullscreen {
+                overflow: hidden;
+            }
+
+            body.fullscreen .in-page-fullscreen-element {
+                position: fixed !important;
+                z-index: 99999 !important;
+                left: 0 !important;
+                top: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
             }
         `;
 
@@ -73,7 +80,7 @@
     }
 
     // Top window
-    const selector = getIFrameSelector()
+    const selector = getSelector()
     if (!selector) {
         return;
     }
@@ -84,7 +91,7 @@
         iframe = document.querySelector(selector);
     }
 
-    iframe.classList.add('fullscreen-iframe');
+    iframe.classList.add('in-page-fullscreen-element');
 
     const style = document.createElement('style');
     style.innerHTML = getStyles();
@@ -99,7 +106,6 @@
     }
 
     window.addEventListener('message', (message) => {
-        console.log(message);
         if (message.source !== iframe.contentWindow) {
             return;
         }
