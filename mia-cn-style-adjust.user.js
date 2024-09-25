@@ -134,9 +134,12 @@
     style.appendChild(document.createTextNode(css));
     document.head.appendChild(style);
 
-    const iconAdd = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path></svg>`;
-    const iconMinus = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 11V13H19V11H5Z"></path></svg>`;
-    const iconClose = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.0007 10.5865L16.9504 5.63672L18.3646 7.05093L13.4149 12.0007L18.3646 16.9504L16.9504 18.3646L12.0007 13.4149L7.05093 18.3646L5.63672 16.9504L10.5865 12.0007L5.63672 7.05093L7.05093 5.63672L12.0007 10.5865Z"></path></svg>`;
+    const iconAdd =
+        `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path></svg>`;
+    const iconMinus =
+        `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 11V13H19V11H5Z"></path></svg>`;
+    const iconClose =
+        `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.0007 10.5865L16.9504 5.63672L18.3646 7.05093L13.4149 12.0007L18.3646 16.9504L16.9504 18.3646L12.0007 13.4149L7.05093 18.3646L5.63672 16.9504L10.5865 12.0007L5.63672 7.05093L7.05093 5.63672L12.0007 10.5865Z"></path></svg>`;
 
     const control = document.createElement('div');
     control.attachShadow({ mode: 'open' });
@@ -356,16 +359,18 @@
             },
             set pageStatus(value) {
                 this.settings.pageStatus = value;
-                if (value === 'auto')
+                if (value === 'auto') {
                     localStorage.removeItem(`page-status:${location.pathname}`);
-                else
+                } else {
                     localStorage.setItem(`page-status:${location.pathname}`, value);
+                }
             },
             applyPageStatus() {
-                if (this.pageStatus === 'auto')
+                if (this.pageStatus === 'auto') {
                     style.disabled = !isArticlePage();
-                else
-                    style.disabled = (this.pageStatus === 'disabled');
+                } else {
+                    style.disabled = this.pageStatus === 'disabled';
+                }
             },
 
             get fontFamily() {
@@ -413,8 +418,9 @@
             },
 
             pullSettings(event) {
-                if (event.storageArea !== localStorage)
+                if (event.storageArea !== localStorage) {
                     return;
+                }
 
                 switch (event.key) {
                     case `page-status:${location.pathname}`:
@@ -453,21 +459,24 @@
         .mount(control.shadowRoot.querySelector('#control-app'));
 
     function nodeNameIsAny(node, name) {
-        if (Array.isArray(name))
+        if (Array.isArray(name)) {
             return name.includes(node.nodeName.toLowerCase());
-        else
+        } else {
             return name === node.nodeName.toLowerCase();
+        }
     }
 
     function removeRedundantLineBreaks() {
         const allNodes = [];
         const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_ALL);
-        while (walker.nextNode())
+        while (walker.nextNode()) {
             allNodes.push(walker.currentNode);
+        }
 
         for (const node of allNodes) {
-            if (!nodeNameIsAny(node, 'br'))
+            if (!nodeNameIsAny(node, 'br')) {
                 continue;
+            }
 
             let prevNode = node.previousSibling;
             while (prevNode && nodeNameIsAny(prevNode, '#text') && !prevNode.textContent.trim()) {
@@ -502,13 +511,13 @@
 
             const prevClasses = new Set(prevNode.classList);
 
-            const shouldRemove =
-                !(prevNode.textContent || '').trim() ||
-                nodeNameIsAny(prevNode, noBreakAfterTag) ||
-                noBreakAfterClass.filter(x => prevClasses.has(x)).length;
+            const shouldRemove = !(prevNode.textContent || '').trim()
+                || nodeNameIsAny(prevNode, noBreakAfterTag)
+                || noBreakAfterClass.filter((x) => prevClasses.has(x)).length;
 
-            if (shouldRemove)
+            if (shouldRemove) {
                 node.remove();
+            }
         }
     }
 
@@ -517,19 +526,23 @@
 
         const linkTags = document.querySelectorAll('link');
         for (const tag of linkTags) {
-            if (!tag.href)
+            if (!tag.href) {
                 continue;
+            }
 
             const filename = tag.href.split('/').pop();
-            if (filename.endsWith('MIA01.css'))
+            if (filename.endsWith('MIA01.css')) {
                 result = true;
+            }
         }
 
         const pageFilename = location.pathname.split('/').pop();
-        if (/index.*\.html?$/.test(pageFilename))
+        if (/index.*\.html?$/.test(pageFilename)) {
             result = false;
-        if (!pageFilename.includes('.'))
+        }
+        if (!pageFilename.includes('.')) {
             result = false;
+        }
 
         return result;
     }

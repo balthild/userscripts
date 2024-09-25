@@ -9,13 +9,13 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
-    const $$ = sel => document.querySelectorAll(sel);
-    const $ = sel => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+    const $ = (sel) => document.querySelector(sel);
 
-    $('.nav-search-keyword').addEventListener('keydown', e => {
+    $('.nav-search-keyword').addEventListener('keydown', (e) => {
         if (e.code === 'Enter') {
             var inputEvent = new Event('input', {
                 bubbles: true,
@@ -35,10 +35,10 @@
 
         if (active) {
             if (e.code === 'ArrowUp') {
-                //newActive = active.previousElementSibling || $('.history-item:last-child');
+                // newActive = active.previousElementSibling || $('.history-item:last-child');
                 newActive = active.previousElementSibling;
             } else {
-                //newActive = active.nextElementSibling || $('.history-item:first-child');
+                // newActive = active.nextElementSibling || $('.history-item:first-child');
                 newActive = active.nextElementSibling;
             }
 

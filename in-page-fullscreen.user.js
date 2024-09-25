@@ -80,7 +80,7 @@
     }
 
     // Top window
-    const selector = getSelector()
+    const selector = getSelector();
     if (!selector) {
         return;
     }
