@@ -14,6 +14,7 @@
     function getSelector() {
         switch (location.host) {
             case 'www.7xi.tv':
+            case 'www.tbdm1.com':
                 return '#playleft iframe';
 
             case 'www.iyf.tv':
@@ -51,6 +52,14 @@
                 styles += css`
                     body.fullscreen .player-left {
                         z-index: 99999;
+                    }
+                `;
+
+            case 'www.tbdm1.com':
+                styles += css`
+                    body.fullscreen #header-top,
+                    body.fullscreen #player-sidebar-is {
+                        z-index: -1;
                     }
                 `;
 
