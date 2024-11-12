@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         element in-page fullscreen
+// @name         In-Page Fullscreen
 // @namespace    http://tampermonkey.net/
 // @version      2024-08-27
 // @description  try to take over the world!
