@@ -33,13 +33,14 @@
     document.body.appendChild(message);
 
     let timeout = undefined;
-    function showMessage(box, text) {
+    function showMessage(video, text) {
         if (timeout !== undefined) {
             clearTimeout(timeout);
         }
 
-        const left = box.left + box.width / 2 - 40;
-        const top = box.top + window.scrollY + 32;
+        const rect = video.getBoundingClientRect();
+        const left = rect.left + rect.width / 2 - 40;
+        const top = rect.top + window.scrollY + 32;
 
         message.textContent = text;
         message.style.left = `${left}px`;
@@ -59,8 +60,7 @@
 
         video.playbackRate = speed;
 
-        const rect = video.getBoundingClientRect();
-        showMessage(rect, `${speed}x`);
+        showMessage(video, `${speed}x`);
     }
 
     function isPlaying(video) {
