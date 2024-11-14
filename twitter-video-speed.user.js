@@ -15,7 +15,7 @@
     const config = {
         delta: 0.25,
         min: 1,
-        max: 2,
+        max: 2.5,
     };
 
     const message = document.createElement('div');
