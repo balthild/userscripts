@@ -1,0 +1,63 @@
+/* ==UserStyle==
+@name        bilibili-search-history
+@namespace   github.com/balthild/userscripts
+@version     0.1.0
+@description Bilibili Search History
+@author      Balthild
+==/UserStyle== */
+
+@-moz-document domain("bilibili.com") {
+    .histories-wrap {
+        max-height: none !important;
+        padding: 0;
+    }
+
+    .bili-header:not(#a#b#c#d) {
+        .search-panel {
+            padding-bottom: 4px;
+        }
+
+        .histories {
+            display: block;
+            margin: 8px 0 4px;
+        }
+
+        .history-item {
+            height: 32px;
+            display: block;
+            line-height: 32px;
+            font-size: 14px;
+            position: relative;
+            cursor: pointer;
+            padding: 0 16px;
+            margin: 2px;
+
+            background: none;
+            border-radius: 0;
+
+            &.active,
+            &:focus,
+            &:hover {
+                outline: none;
+                background: #f4f4f4;
+                color: initial;
+            }
+
+            .close {
+                display: none;
+            }
+        }
+    }
+
+    .history-text {
+        max-width: none !important;
+    }
+
+    .history-fold-wrap {
+        display: none !important;
+    }
+
+    .trending {
+        display: none !important;
+    }
+}

@@ -1,0 +1,15 @@
+{
+  "extends": "@parcel/config-default",
+  "namers": ["./plugins/namer-userscript", "..."],
+  "runtimes": ["./plugins/runtime-userscript", "..."],
+  "transformers": {
+    "src/styles/*.user.scss": ["./plugins/transformer-userstyle", "..."],
+    "src/styles/*.user.css": [],
+  },
+  "packagers": {
+    "styles/*.user.css": "./plugins/packager-userstyle",
+  },
+  "optimizers": {
+    "scripts/*.user.js": ["./plugins/optimizer-userscript"],
+  },
+}

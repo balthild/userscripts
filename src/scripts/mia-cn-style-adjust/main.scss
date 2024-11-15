@@ -1,0 +1,140 @@
+:root {
+    --font-sans: 'Source Sans', 'Noto Sans', 'Source Han Sans SC', 'Noto Sans CJK SC', sans-serif;
+    --font-serif: 'Source Serif', 'Noto Serif', 'Source Han Serif SC', 'Noto Serif CJK SC', serif;
+    --font-custom: '方正悠宋 GBK 508R', serif;
+
+    --font-family: var(--font-sans);
+    --font-size: 20px;
+    --text-width: 32rem;
+
+    font-family: var(--font-family) !important;
+    font-size: var(--font-size) !important;
+    line-height: 1.9 !important;
+}
+
+html {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+body {
+    max-width: var(--text-width) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 0 2rem;
+
+    @media (min-width: 768px) {
+        padding: 0 4rem;
+    }
+}
+
+body * {
+    line-height: 2;
+}
+
+body p.MsoNormal,
+li.MsoNormal,
+div.MsoNormal,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+p.title0,
+p.title1,
+p.title2,
+p.weba,
+p.author,
+p.date,
+p.intr,
+p.intr1,
+div.a1,
+div.a2,
+div.a3,
+div.a4,
+pre,
+.content,
+table:not(#x) {
+    font-family: unset;
+    line-height: unset;
+    box-sizing: border-box;
+}
+
+body,
+p {
+    font-size: inherit;
+    text-align: justify;
+}
+
+table {
+    font-size: unset;
+    width: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 1em 0 !important;
+}
+
+h1 {
+    font-size: 1.6rem !important;
+}
+
+h2 {
+    font-size: 1.4rem !important;
+}
+
+h3 {
+    font-size: 1.2rem !important;
+}
+
+h4 {
+    font-size: 1.1rem !important;
+}
+
+h5 {
+    font-size: 1rem !important;
+}
+
+div.a1,
+div.a2,
+div.a3,
+div.a4,
+blockquote {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    padding: 1rem 1.6rem;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-left: 5px solid rgba(0, 0, 0, 0.1);
+    line-height: 2;
+}
+
+sup,
+sub {
+    font-size: 10.5pt;
+}
+
+img {
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+hr {
+    margin: 1rem 0;
+}
+
+.MsoFootnoteText {
+    font-size: 10.5pt;
+}
+
+.MsoFootnoteText * {
+    font-family: unset !important;
+}
