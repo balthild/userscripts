@@ -30,7 +30,7 @@ export function StyleControl(props: StyleControlProps) {
     const [fontFamily, setFontFamily] = useSetting('font-family', String, 'sans', 'sans');
     createEffect(() => setStyleProperty('--font-family', `var(--font-${fontFamily()})`));
 
-    const [fontCustom, setFontCustom] = useSetting('font-custom', String, `'方正悠宋 GBK 508R', serif`, '');
+    const [fontCustom, setFontCustom] = useSetting('font-custom', String, `"方正屏显雅宋_GBK", serif`, '');
     createEffect(() => setStyleProperty('--font-custom', fontCustom()));
 
     const [fontSize, setFontSize] = useSetting('font-size', Number, 20);
@@ -67,9 +67,11 @@ export function StyleControl(props: StyleControlProps) {
                         <TabItem signal={[fontFamily, setFontFamily]} value='serif'>思源宋体</TabItem>
                         <TabItem signal={[fontFamily, setFontFamily]} value='sans'>思源黑体</TabItem>
                         <TabItem signal={[fontFamily, setFontFamily]} value='custom'>自定义</TabItem>
-                        <div class={styles.custom} v-show="fontFamily === 'custom'">
-                            <input type='text' value={fontCustom()} onInput={[onInput, setFontCustom]} />
-                        </div>
+                        <Show when={fontFamily() === 'custom'}>
+                            <div class={styles.custom}>
+                                <input type='text' value={fontCustom()} onInput={[onInput, setFontCustom]} />
+                            </div>
+                        </Show>
                     </div>
 
                     <div class={styles.spinbox}>
