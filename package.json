@@ -1,0 +1,43 @@
+{
+  "name": "userscripts",
+  "version": "0.1.0",
+  "description": "Some userscripts and userstyles.",
+  "author": "Balthild <ibalthild@gmail.com>",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "dev": "citlali dev",
+    "build": "citlali build",
+    "clean": "citlali clean",
+    "fmt": "dprint fmt"
+  },
+  "type": "module",
+  "packageManager": "yarn@4.9.1",
+  "dependencies": {
+    "solid-js": "^1.9.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.27.4",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@svgr/core": "^8.1.0",
+    "@svgr/rollup": "^8.1.0",
+    "@types/babel__core": "^7",
+    "@types/dom-navigation": "^1.0.5",
+    "@types/node": "^22.15.29",
+    "babel-preset-solid": "^1.9.6",
+    "citlali": "^0.1.0",
+    "dprint": "^0.50.0",
+    "sass": "^1.89.1",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.3"
+  },
+  "resolutions": {
+    "@citlali/workspace": "file:../../ES/citlali/packages/workspace",
+    "@citlali/utils": "file:../../ES/citlali/packages/utils",
+    "@citlali/bundler": "file:../../ES/citlali/packages/bundler",
+    "@citlali/core": "file:../../ES/citlali/packages/core",
+    "@citlali/runtime": "file:../../ES/citlali/packages/runtime",
+    "@citlali/cli": "file:../../ES/citlali/packages/cli",
+    "citlali": "file:../../ES/citlali/packages/citlali"
+  }
+}

@@ -1,0 +1,11 @@
+#message {
+    display: none;
+    width: 72px;
+    padding: 10px 0;
+    font-size: 18px;
+    text-align: center;
+    background: rgba(255 255 255 / 80%);
+    border-radius: 6px;
+    position: absolute;
+    z-index: 99999;
+}
