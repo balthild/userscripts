@@ -11,7 +11,7 @@ export default defineUserscript({
     version: '0.2',
     description: '改善中文马克思主义文库的阅读体验',
     author: 'Balthild',
-    match: ['https://www.marxists.org'],
+    match: ['https://www.marxists.org/*'],
 
     main() {
         if (isArticlePage()) {

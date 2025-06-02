@@ -111,7 +111,7 @@ function TabItem(props: TabItemProps) {
     return (
         <div
             class={styles.tab}
-            classList={{ current: state() === props.value }}
+            classList={{ [styles.current]: state() === props.value }}
             onClick={() => setState(props.value)}
         >
             {props.children}
