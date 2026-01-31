@@ -26,15 +26,15 @@ export default defineUserscript({
     },
 });
 
-function getIgnoreClasses() {
+function getIgnoredClasses() {
     switch (location.hostname) {
         case 'www.negationmag.com':
-            return 'pull-quote';
+            return ['pull-quote'];
     }
 }
 
 function createNodeFilter(): NodeFilter {
-    const ignored = getIgnoreClasses().split(',').map((x) => x.trim());
+    const ignored = getIgnoredClasses().map((x) => x.trim());
 
     return (node: Element) => {
         if (!node.nodeName || node.nodeName.startsWith('#')) {

@@ -1,6 +1,6 @@
 import styles from './control.module.scss';
 
-import { createEffect, createSignal, JSX, onCleanup, onMount, Show } from 'solid-js';
+import { createEffect, createSignal, onCleanup, onMount, Show } from 'solid-js';
 
 import IconAdd from './icons/add.svg';
 import IconClose from './icons/close.svg';
@@ -126,12 +126,12 @@ function useSetting<T = any>(key: string, convert: (v: any) => T, defVal: T, rmV
         convert(localStorage.getItem(key) ?? defVal),
     );
 
-    const updateValue = (setter: T | ((prev: T) => T)) => {
-        const next = setValue(setter as any);
+    const updateValue = (setter: Exclude<T, Function> | ((prev: T) => T)) => {
+        const next = setValue<T>(setter);
         if (next === rmVal) {
             localStorage.removeItem(key);
         } else {
-            localStorage.setItem(key, next as any);
+            localStorage.setItem(key, String(next));
         }
         return next;
     };
@@ -142,13 +142,8 @@ function useSetting<T = any>(key: string, convert: (v: any) => T, defVal: T, rmV
         }
     };
 
-    onMount(() => {
-        window.addEventListener('storage', pullSettings);
-    });
-
-    onCleanup(() => {
-        window.removeEventListener('storage', pullSettings);
-    });
+    onMount(() => window.addEventListener('storage', pullSettings));
+    onCleanup(() => window.removeEventListener('storage', pullSettings));
 
     return [value, updateValue] as const;
 }

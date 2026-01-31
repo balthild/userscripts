@@ -13,7 +13,7 @@
 }
 
 @-moz-document domain("bilibili.com") {
-    .histories-wrap {
+    .bili-header .histories-wrap {
         max-height: none !important;
         padding: 0;
     }
