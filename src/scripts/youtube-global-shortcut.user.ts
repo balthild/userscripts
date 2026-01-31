@@ -1,31 +1,47 @@
 import { defineUserscript } from 'citlali';
 
 export default defineUserscript({
-    name: 'YouTube Global Shortcuts',
+    name: 'YouTube Shortcuts Optimization',
     namespace: 'https://github.com/balthild/userscripts',
     version: '1.0',
     author: 'Balthild',
-    description: 'Trigger Specific TouTube Shortcut Keys When Not Focusing the Video',
-    match: ['https://www.youtube.com/*'],
+    description: 'Make YouTube shortcuts more ergonomic.',
+    match: ['https://www.youtube.com/watch*'],
 
     main() {
-        window.addEventListener('keydown', replay);
-        window.addEventListener('keyup', replay);
+        window.addEventListener('keydown', handleVolumeKeysGlobally);
+        window.addEventListener('keyup', handleVolumeKeysGlobally);
+
+        const progress = document.querySelector('.ytp-progress-bar');
+        if (progress) {
+            progress.addEventListener('keydown', handleVolumeKeysOnProgress, true);
+            progress.addEventListener('keyup', handleVolumeKeysOnProgress, true);
+        }
     },
 });
 
-function replay(event: KeyboardEvent) {
+function handleVolumeKeysGlobally(event: KeyboardEvent) {
     if (!event.isTrusted || event.target !== document.body) return;
     if (event.ctrlKey || event.altKey || event.metaKey) return;
+    if (event.code !== 'ArrowUp' && event.code !== 'ArrowDown') return;
+
+    relocate(document.getElementById('movie_player'), event);
+}
+
+function handleVolumeKeysOnProgress(event: KeyboardEvent) {
+    if (!event.isTrusted || !(event.target instanceof HTMLElement)) return;
+    if (!event.target.classList.contains('ytp-progress-bar')) return;
+    if (event.code !== 'ArrowUp' && event.code !== 'ArrowDown') return;
+
+    relocate(document.getElementById('movie_player'), event);
+}
+
+function relocate(element: HTMLElement | null, event: KeyboardEvent) {
+    if (!element) return;
 
     event.preventDefault();
-    document.getElementById('movie_player')?.dispatchEvent(
-        new KeyboardEvent(event.type, {
-            code: event.code,
-            isComposing: event.isComposing,
-            key: event.key,
-            location: event.location,
-            repeat: event.repeat,
-        }),
-    );
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+
+    element.dispatchEvent(new KeyboardEvent(event.type, event));
 }
