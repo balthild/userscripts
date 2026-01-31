@@ -16,6 +16,7 @@ export default defineUserscript({
 
 function replay(event: KeyboardEvent) {
     if (!event.isTrusted || event.target !== document.body) return;
+    if (event.ctrlKey || event.altKey || event.metaKey) return;
 
     event.preventDefault();
     document.getElementById('movie_player')?.dispatchEvent(
